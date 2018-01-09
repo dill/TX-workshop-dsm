@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Density surface models: spatial modelling of distance sampling data</title>
+    <meta charset="utf-8">
+    <meta name="author" content="David L Miller" />
+    <link href="talk_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="talk_files/remark-css-0.0.1/fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Density surface models: spatial modelling of distance sampling data
+### David L Miller
+
+---
+
+
+background-size: cover
+&lt;!--background-image: url(images/bg.JPG)--&gt;
+
+
+
+
+# Spatial models of distance sampling data
+
+- Collect spatially referenced data
+- Why not make spatially-explicit models?
+- Go beyond stratified estimates
+- Relate environmental covariates to counts
+
+---
+
+class: inverse, middle, center
+
+# Motivating example
+
+---
+
+# Rhode Island loons
+
+
+
+
+- Wind development off RI/MA
+- Map usage
+- Estimate abundance
+- Estimate uncertainty
+
+&lt;div align="center"&gt;&lt;img src="images/loon.jpg" width=580px&gt;&lt;/div&gt;
+
+&lt;small&gt;Photo by &lt;a href="http://www.flickr.com/photos/jackanapes/44534740/in/photolist-4WfCm-5fGWY-5kcwt-gYsVe-gYsVf-rfrFy-wk8SY-Bbkf9-CJGoH-JAwGP-WnzZb-2KrNkj-3YEz3W-49jRDt-49jSgD-49jThH-4eYB5g-4f3AbJ-4iejaL-4iejgf-4nFVgg-4rqKb8-4znidm-4BSyxi-4BWPZw-4Dtb18-4DxqB5-4DxqMY-4EBCuB-4EGy24-4EGy8F-4ELPWu-4KM4T1-5byKfc-5dK7xM-5BmTVz-5GpYcr-5GpZw2-5MEqxV-5Pkq76-76qvBB-76qvNH-76uqKf-7qJ5CU-7v8iXi-7vngHz-dTvFyn-dN222q-dN1Nuj-8oFmQZ-8oFmXD/"&gt;jackanapes on flickr&lt;/a&gt; (&lt;a href="http://creativecommons.org/licenses/by-nc-nd/2.0/deed.en_GB"&gt;CC BY-NC-ND&lt;/a&gt;)&lt;/small&gt;
+
+---
+
+# Aerial surveys
+
+.pull-left[
+- Small plane
+- 2 observers (1 each side)
+- Record on dictaphone
+- Transcribe later
+- Glare an issue (roughly N-S transects)
+
+&lt;br/&gt;
+&lt;img src="images/riflag.png" width=180px&gt;
+
+]
+
+.pull-right[
+![](talk_files/figure-html/transects-1.png)&lt;!-- --&gt;
+]
+---
+
+# Non-uniform spatial distribution
+
+
+&lt;div align="center"&gt;&lt;img src="images/loon_rawdata.png" width=580px&gt;&lt;/div&gt;
+
+---
+
+# What can we do?
+
+
+.pull-left[
+- Stratification is not the solution
+  - Arbitrary
+  - Discard information
+]
+
+.pull-right[
+![](talk_files/figure-html/transectsagain-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Aims
+
+- Want to estimate abundance
+- Distribution in space can be important
+  - (Don't always have enough information to estimate this)
+- What *correlates* with distribution?
+  - Environmental covariates
+- Still doing *distance sampling*!
+  - Need to account for detectability
+
+---
+
+class: inverse, middle, center
+
+# Putting together distance sampling and spatial modelling
+
+---
+
+# Making our data spatial -- points
+
+- Points
+  - Know point location
+  - Know number of animals seen per point
+
+&lt;div align="center"&gt;&lt;img src="images/ptdsmproc.png" width=580px&gt;&lt;/div&gt;
+
+---
+
+# Making our data spatial -- lines
+
+- Lines
+  - Lines are **too long**
+  - Can't use as sample units
+  - *Segment* the lines
+
+&lt;div align="center"&gt;&lt;img src="images/loon_segmenting.png" width=580px&gt;&lt;/div&gt;
+
+---
+
+# Including detectability
+
+- Going back to *effective strip width*
+  - think: *effective area*
+
+- Effective areas are then:
+  - `\(2 w l_j \hat{p}_j\)` for lines
+  - `\(\pi w^2 \hat{p}_j\)` for points
+
+How do we include this in our models?
+
+---
+
+# Building spatial models
+
+- Want to relate *counts* per *sample unit* to covariates
+- Covariates like: space, also environmental covariates?
+- Spatial modelling using Generalized Additive Models (GAMs)
+- 2 stage approach
+  - get the detection function right
+  - then model spatial distribution
+
+---
+
+# Spatially-referenced data
+
+![](talk_files/figure-html/predcov-1.png)&lt;!-- --&gt;
+
+---
+
+
+class: inverse, middle, center
+
+# Spatial modelling
+
+---
+
+# Generalised additive models
+
+
+`$$\mathbb{E}\left(n_j\right) = \color{red}{A_j}\color{blue}{\hat{p}_j} \color{green}{\exp}\left[\color{grey}{ \beta_0 + \sum_k s_k(z_{kj})} \right]$$`
+
+`\(n_j\sim\)` some count distribution
+
+- `\(\color{red}{\text{area of segment or circle}}\)`
+- `\(\color{blue}{\text{probability of detection in segment}}\)`
+- `\(\color{green}{\text{(inverse) link function}}\)`
+- `\(\color{grey}{\text{model terms}}\)`
+
+---
+
+# What are those s thingos?
+
+
+
+- "Smooth" functions of (spatial?) covariates
+- Could be univariate, could be multivariate
+
+![](talk_files/figure-html/plotsmooths-1.png)&lt;!-- --&gt;
+
+---
+
+# How do we build them?
+
+.pull-left[
+![](talk_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+- Functions made of other, simpler functions
+- **Basis functions** `\(b_k\)`, estimate `\(\beta_k\)` 
+
+`$$s(x) = \sum_{k=1}^K \beta_k b_k(x)$$`
+]
+
+
+---
+
+
+Straight lines vs. interpolation
+=================================
+
+.pull-left[
+![](talk_files/figure-html/wiggles-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+- Want a line that is "close" to all the data
+- Don't want interpolation -- we know there is "error"
+- Balance between **interpolation** and **generality**
+]
+
+---
+
+# Making wigglyness matter
+
+- Fit needs to be **penalised**
+- What should we penalize? How wiggly the function is!
+- *Something* like:
+
+`$$\int_\mathbb{R} \left( \frac{\partial^2 s(x)}{\partial x^2}\right)^2 \text{d}x$$`
+
+- Estimate the `\(\beta_k\)` terms but penalise objective
+  - "closeness to data" + penalty (REML?)
+
+---
+
+# Smoothing parameter
+
+
+![](talk_files/figure-html/wiggles-plot-1.png)&lt;!-- --&gt;
+
+---
+
+# Count distributions
+
+.pull-left[
+
+![](talk_files/figure-html/countshist-plot-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+
+- Response is a count (not not always integer)
+- Often, there are a lot of zeros
+- Want response distribution that deals with that
+- Flexible mean-variance relationship
+
+]
+
+---
+
+# Tweedie distribution
+
+.pull-left[
+![](talk_files/figure-html/tweedie-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+-  `\(\text{Var}\left(\text{count}\right) = \phi\mathbb{E}(\text{count})^q\)`
+- Common distributions are sub-cases:
+  - `\(q=1 \Rightarrow\)` Poisson
+  - `\(q=2 \Rightarrow\)` Gamma
+  - `\(q=3 \Rightarrow\)` Normal
+- We are interested in `\(1 &lt; q &lt; 2\)`
+- (here `\(q = 1.2, 1.3, \ldots, 1.9\)`)
+]
+
+---
+
+# Abundance estimation
+
+.pull-left[
+- If we have covariates available over a grid evaluate equation
+
+`$$n_p = A_p\exp\left[ \beta_0 + s_{x,y}(x_p,y_p) +\\ s_\text{depth}(\text{depth}_p) \right]$$`
+
+- Sum grid cells for total abundance estimate
+]
+
+.pull-right[
+![](talk_files/figure-html/plotpred-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Uncertainty estimation
+
+.pull-left[
+- Point estimates (even spatial ones) are not the end of the story
+- Want to know how certain we are about our map
+- Mapping uncertainty can help
+]
+
+.pull-right[
+![](talk_files/figure-html/unc-1.png)&lt;!-- --&gt;
+]
+
+---
+
+class: inverse, middle, center
+
+# Potential pitfalls
+
+---
+
+class: inverse, middle, center
+
+# Tobler's first law of geography
+
+"Everything is related to everything else,&lt;br/&gt;but near things are more related than distant things"
+
+---
+
+# Implications of Tobler's law
+
+![](talk_files/figure-html/pairrrrs-1.png)&lt;!-- --&gt;
+
+---
+
+# Selecting spatial covariates
+
+- Complicated topic
+  - What are covariates really *doing*? See later
+- Several strategies
+  - Stepwise AIC selection (path dependence)
+  - "Shrinkage" type approaches
+  - (Emprical Bayes)
+- Often smooths of location are adequate
+  - And keep you honest (extrapolation)
+
+
+---
+
+# Detection-level covariates
+
+
+- Confounding between e.g., sea state and space important
+- Pattern the same but abundance can change a LOT
+
+
+&lt;div align="center"&gt;&lt;img src="images/weather_or_density.png" width=580px&gt;&lt;/div&gt;
+
+---
+
+# Visibility during POWER 2014
+
+&lt;img src="images/power-weather.png" width="100%"&gt;
+
+Thanks to Hiroto Murase and co for this data!
+
+---
+
+# Covariates can make a big difference!
+
+&lt;img src="images/covar-inout.png" width="100%"&gt;
+
+---
+
+# Spatial modelling won't solve all yr problems
+
+.pull-left[
+&lt;img src="images/design-zzl.png" width="100%"&gt;
+]
+
+.pull-right[
+- Design issues
+  - Ludicrous extrapolation
+  - Survey plan not robust to weather issues
+  - Non-uniform distribution wrt sampler
+  - Migration
+
+**Spatial models alone can't solve these issues**
+]
+
+---
+
+# Resources
+
+.pull-left[
+![](images/igam.jpg)
+]
+
+.pull-right[
+- Loon analysis:
+  - "Distance Sampling" chapter in *Quantitative Analyses in Wildlife Science*, Buckland, Miller &amp; Rexstad
+  - Winiarski, Miller, Paton, and McWilliams (2013) Spatially explicit model of wintering common loons: conservation implications. Marine Ecology Progress Series.
+- Miller, Burt, Rexstad and Thomas (2013) Spatial models for distance sampling data: recent developments and future directions. Methods in Ecology and Evolution.
+]
+
+---
+
+class: inverse, middle, center
+
+# I am going to stop talking very soon...
+
+---
+
+# Summary
+
+- We often collect spatially-explicit data
+- There is information there to harness
+- This *won't* solve all the problems you have
+
+- Use 2 stage approach
+  - First get your detection function right
+  - *Then* do spatial modelling
+- Spatial modelling is a multi-headed hydra
+- Lots of things to think about
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
