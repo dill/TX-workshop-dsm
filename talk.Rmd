@@ -3,6 +3,8 @@ title: "Density surface models: spatial modelling of distance sampling data"
 author: David L Miller
 output:
   xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    css: ["default", "fonts", "custom.css"]
     nature:
       highlightStyle: github
       highlightLines: true
@@ -67,7 +69,7 @@ loons$distbegin <- loons$distend <- NULL
 - Glare an issue (roughly N-S transects)
 
 <br/>
-<img src="images/riflag.png" width=180px>
+<div align="center"><img src="images/riflag.png" width=180px></div>
 
 ]
 
@@ -522,7 +524,7 @@ plot(seg[, c("x", "y", "depthm", "gchl_long", "roughness")], pch=19, cex=0.4)
 
 # Visibility during POWER 2014
 
-<img src="images/power-weather.png" width="100%">
+<img src="images/power-weather.png" width="90%">
 
 Thanks to Hiroto Murase and co for this data!
 
@@ -555,14 +557,16 @@ Thanks to Hiroto Murase and co for this data!
 # Resources
 
 .pull-left[
-![](images/igam.jpg)
+<img src="images/igam.jpg" width="80%">
 ]
 
 .pull-right[
+.smaller[
 - Loon analysis:
-  - "Distance Sampling" chapter in *Quantitative Analyses in Wildlife Science*, Buckland, Miller & Rexstad
-  - Winiarski, Miller, Paton, and McWilliams (2013) Spatially explicit model of wintering common loons: conservation implications. Marine Ecology Progress Series.
-- Miller, Burt, Rexstad and Thomas (2013) Spatial models for distance sampling data: recent developments and future directions. Methods in Ecology and Evolution.
+  - *Distance Sampling* chapter in *Quantitative Analyses in Wildlife Science*, Buckland, Miller & Rexstad
+  - Winiarski, Miller, Paton, and McWilliams (2013) *Spatially explicit model of wintering common loons: conservation implications*. Marine Ecology Progress Series.
+- Miller, Burt, Rexstad and Thomas (2013) *Spatial models for distance sampling data: recent developments and future directions*. Methods in Ecology and Evolution.
+]
 ]
 
 ---
