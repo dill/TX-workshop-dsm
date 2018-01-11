@@ -11,7 +11,6 @@ output:
 ---
 
 background-size: cover
-<!--background-image: url(images/bg.JPG)-->
 
 ```{r include=FALSE}
 library(knitr)
@@ -43,6 +42,7 @@ library(viridis)
 library(Distance)
 library(dsm)
 load("data/loons.RData")
+eps<-1e-1
 
 bins <- c(44, 163, 432, 1000)
 loons$distbegin <- loons$distend <- NULL
@@ -77,12 +77,18 @@ loons$distbegin <- loons$distend <- NULL
 ```{r transects}
 p <- ggplot(coast) +
   geom_polygon(aes(x=x, y=y, group=group), data=coast) +
+  geom_tile(aes(x=x, y=y), fill="#9B3634", data=pred,
+            width=2+eps, height=2+eps) +
   geom_segment(aes(x=bx, xend=tx, y=by, yend=ty,
                    group=Transect.Label), data=seg) +
+  annotate("text", x=-35, y=-33, size=10, colour="#9B3634", parse = TRUE,
+            label=paste0(sum(pred$cellaream)/1000^2, "~km^{2}")) +
   coord_equal(xlim=c(-42, 40), ylim=c(-40, 40)) +
   theme_void()
 
 print(p)
+#> sum(pred$cellaream)/1000^2
+#> 3680
 ```
 ]
 ---
@@ -428,7 +434,6 @@ library(viridis)
 pred_a <- pred
 pred_a$Abundance <- unlist(predict(mod1, newdata=pred,
                                       off.set=pred$cellaream))
-eps<-1e-1
 p <- ggplot(pred_a) +
   geom_polygon(aes(x=x, y=y, group=group), data=coast) +
   geom_tile(aes(x=x, y=y, fill=Abundance), width=2+eps, height=2+eps) +
