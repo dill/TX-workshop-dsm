@@ -23,46 +23,23 @@ background-size: cover
 
 
 
-```
-## Warning: use rgdal::readOGR or sf::st_read
-```
-
-```
-## Shapefile type: Polygon, (5), # of Shapes: 1
-```
-
-```
-## Warning: use rgdal::readOGR or sf::st_read
-```
-
-```
-## Shapefile type: Polygon, (5), # of Shapes: 1
-```
-
-```
-## Warning: use rgdal::readOGR or sf::st_read
-```
-
-```
-## Shapefile type: Point, (1), # of Shapes: 32
-```
-
-```
-## Warning: use rgdal::readOGR or sf::st_read
-```
-
-```
-## Shapefile type: Point, (1), # of Shapes: 32
-```
 
 
 
 
 # Example analysis
 
+.pull-left[
 - Point transect data
 - Collected by Steve Buckland
-- Small birds
+- Data on chaffinch, great tit, robin, winter wren
+- Just looking at wren (*Troglodytes troglodytes*) here
+]
+
+.pull-right[
+![a winter wren](36408899245_0401014071_b.jpg)
+]
+
 
 ---
 
@@ -228,7 +205,7 @@ class: inverse, middle, center
 ## indicate that k is too low, especially if edf is close to k'.
 ## 
 ##        k' edf k-index p-value
-## s(X,Y) 24  18    1.25    0.96
+## s(X,Y) 24  18    1.25    0.92
 ```
 
 ---
@@ -249,15 +226,18 @@ class: inverse, middle, center
 ---
 
 
-## Comparison with design-based estimates
+# Comparison with design-based estimates
 
 - Buckland (2006) analysed these data w/ design-based method
 
 
-|       | Density|
-|:------|-------:|
-|s(x,y) |   0.985|
-|design |   1.020|
+|             | Density|
+|:------------|-------:|
+|DSM          |   0.985|
+|Design-based |   1.020|
+
+
+# Summary
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
