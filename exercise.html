@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Density surface models: example analysis</title>
+    <meta charset="utf-8">
+    <meta name="author" content="David L Miller" />
+    <link href="exercise_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="exercise_files/remark-css-0.0.1/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Density surface models: example analysis
+### David L Miller
+
+---
+
+
+background-size: cover
+
+
+
+
+```
+## Warning: use rgdal::readOGR or sf::st_read
+```
+
+```
+## Shapefile type: Polygon, (5), # of Shapes: 1
+```
+
+```
+## Warning: use rgdal::readOGR or sf::st_read
+```
+
+```
+## Shapefile type: Polygon, (5), # of Shapes: 1
+```
+
+```
+## Warning: use rgdal::readOGR or sf::st_read
+```
+
+```
+## Shapefile type: Point, (1), # of Shapes: 32
+```
+
+```
+## Warning: use rgdal::readOGR or sf::st_read
+```
+
+```
+## Shapefile type: Point, (1), # of Shapes: 32
+```
+
+
+
+
+# Example analysis
+
+- Point transect data
+- Collected by Steve Buckland
+- Small birds
+
+---
+
+# Sampled locations
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="exercise_files/figure-html/map_1-1.png" alt="Map with sampled points"  /&gt;
+&lt;p class="caption"&gt;Map with sampled points&lt;/p&gt;
+&lt;/div&gt;
+
+
+
+Setting up the segment data, which in our case are the points that were visited...
+
+
+
+
+
+
+Setting up the observation data, which links the observations with the segments (points):
+
+
+
+---
+
+
+# Prediction grid
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="exercise_files/figure-html/proj_grid-1.png" alt="Projection grid"  /&gt;
+&lt;p class="caption"&gt;Projection grid&lt;/p&gt;
+&lt;/div&gt;
+
+```
+## [1] "SpatialPointsDataFrame"
+## attr(,"package")
+## [1] "sp"
+```
+
+```
+## Warning: use rgdal::readOGR or sf::st_read
+
+## Warning: use rgdal::readOGR or sf::st_read
+```
+
+---
+
+# Detection function
+
+![](exercise_files/figure-html/det_function-1.png)&lt;!-- --&gt;
+
+---
+
+# Goodness-of-fit
+
+
+.pull-left[
+![](exercise_files/figure-html/gof-1.png)&lt;!-- --&gt;
+
+```
+## 
+## Goodness of fit results for ddf object
+## 
+## Distance sampling Cramer-von Mises test (unweighted)
+## Test statistic = 0.218905 p-value = 0.233655
+```
+]
+
+.pull-right[
+- Cramer-von Mises `\(p\)`-value = 0.234
+]
+---
+
+class: inverse, middle, center
+
+# We can now fit some DSMs...
+
+
+---
+
+# Density surface modelling
+
+
+- Only have `\(x\)` and `\(y\)` (projected) locations
+- `$$\mathbb{E} (n_j) = \pi w^2 \hat{p}_j \exp\left[ \beta_0 + s_{x,y}(x_j, y_j) \right]$$`
+- formula in Distance for Windows: `s(X, Y, k=25)`
+- (need to test `k` values, just need to be too big)
+
+
+
+
+
+
+
+
+
+---
+
+# Model results
+
+
+```
+## 
+## Family: Tweedie(p=1.01) 
+## Link function: log 
+## 
+## Formula:
+## count ~ s(X, Y, k = 25) + offset(off.set)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -9.18431    0.03723  -246.7   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##          edf Ref.df     F p-value   
+## s(X,Y) 17.99  21.65 4.244 0.00651 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.799   Deviance explained = 91.1%
+## -REML = 55.729  Scale est. = 0.14306   n = 30
+```
+
+---
+
+# Model checking plots
+
+![](exercise_files/figure-html/check-1.png)&lt;!-- --&gt;
+
+```
+## 
+## Method: REML   Optimizer: outer newton
+## full convergence after 21 iterations.
+## Gradient range [-0.0001087282,4.211118e-06]
+## (score 55.72944 &amp; scale 0.1430583).
+## Hessian positive definite, eigenvalue range [4.211102e-06,8583.471].
+## Model rank =  25 / 25 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##        k' edf k-index p-value
+## s(X,Y) 24  18    1.25    0.94
+```
+
+---
+
+# Checking basis size
+
+
+```
+## 
+## Method: REML   Optimizer: outer newton
+## full convergence after 21 iterations.
+## Gradient range [-0.0001087282,4.211118e-06]
+## (score 55.72944 &amp; scale 0.1430583).
+## Hessian positive definite, eigenvalue range [4.211102e-06,8583.471].
+## Model rank =  25 / 25 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##        k' edf k-index p-value
+## s(X,Y) 24  18    1.25    0.96
+```
+
+---
+
+## Making predictions
+
+
+
+
+![](exercise_files/figure-html/plotpred-1.png)&lt;!-- --&gt;
+
+---
+
+# Uncertainty in predictions
+
+![](exercise_files/figure-html/cvpred-1.png)&lt;!-- --&gt;
+
+---
+
+
+## Comparison with design-based estimates
+
+- Buckland (2006) analysed these data w/ design-based method
+
+
+|       | Density|
+|:------|-------:|
+|s(x,y) |   0.985|
+|design |   1.020|
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
