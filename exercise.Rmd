@@ -71,7 +71,7 @@ names(survey.area) <- c("x","y")
 ]
 
 .pull-right[
-![a winter wren](36408899245_0401014071_b.jpg)
+[![a winter wren](36408899245_0401014071_b.jpg)](https://www.flickr.com/photos/128578170@N06/36408899245/in/photolist-Xtk8ha-ozhg8P-RNvCM5-n7iqFP-JiYdQ8-8dfZJt-tSbTtE-vjKK9D-Yn7a95-VZ8KLd-RFNJoV-mEjZNf-dhQoEC-GDvKiY-TMQcbQ-oRMrpA-nqC484-XiHRpG-dgG2JG-TNVqbS-eJKERD-eJNHMo-c1iy63-c8bDZm-SnAeVC-FQTpHc-ueoFUP-thQ41p-HUVy51-RRuSEA-pPHJnB-AoWBnR-R9z7XL-mEivXr-rnzN5A-NreCVU-mMN1kF-et35N2-XyfDR3-YzByMc-abd3bE-Cgvrtf-YzByXn-absbKi-bJwftR-bru7vi-d9oPmJ-XiHRdu-aes1aA-6nnCq8)
 ]
 
 
@@ -118,7 +118,7 @@ obsdata$object <- 1:nrow(obsdata)
 
 # Prediction grid
 
-```{r proj_grid, fig.cap="Projection grid",fig.align='center', fig.height=3}
+```{r proj_grid, fig.cap="Projection grid",fig.align='center'}
 # create a prediction grid
 # method from http://rfunctions.blogspot.co.uk/2014/12/how-to-create-grid-and-intersect-it.html
 library("raster")
@@ -172,7 +172,7 @@ plot(df.ht, pdf=TRUE)
 
 
 .pull-left[
-```{r gof, eval=TRUE}
+```{r gof, results="hide"}
 gof.results <- gof_ds(df.ht, plot = FALSE)
 gof.cvm <- round(gof.results$dsgof$CvM$W, 3)
 gof.Pval <- round(gof.results$dsgof$CvM$p, 3)
@@ -200,18 +200,14 @@ class: inverse, middle, center
 - Only have $x$ and $y$ (projected) locations
 - $$\mathbb{E} (n_j) = \pi w^2 \hat{p}_j \exp\left[ \beta_0 + s_{x,y}(x_j, y_j) \right]$$
 - formula in Distance for Windows: `s(X, Y, k=25)`
-- (need to test `k` values, just need to be too big)
+- (might need to increase `k` values, just need to be too big)
 
 
 ```{r dsmload}
 library("dsm")
 ```
-
-
-
-
 ```{r dsm-fitting}
-mod_tw <- dsm(count~s(X, Y, k=25), ddf.obj=df.ht, segment.data=segdata, 
+mod_tw <- dsm(count~s(X, Y, k=25), ddf.obj=df.ht, segment.data=segdata,
               observation.data=obsdata, family=tw(), transect="point")
 ```
 
@@ -302,6 +298,13 @@ print(pcount_cv_tw)
 
 ---
 
+# Uncertainty in predictions
+
+```{r unc-est}
+summary(mod_tw_vargam)
+```
+
+---
 
 # Comparison with design-based estimates
 
@@ -313,14 +316,27 @@ study.area.ha <- shape@polygons[[1]]@area / sq.m.to.ha
 total.abundance.tw <- sum(mod_tw_pred)
 density.ha.tw <- total.abundance.tw/study.area.ha
 est.table <- data.frame(Density=c(density.ha.tw,
-                                  design.estimates.species[species.number]))
+                                  design.estimates.species[species.number]),
+                        CI     = c(paste0(round(c(32.52872,
+                                                  48.58598)/study.area.ha, 2),
+                                          collapse="-"),
+                                   "0.80-1.32"))
 # TKTKTK do uncertainty?
+# CIs:
+# HT from paper 0.80, 1.32
+# DSM 32.52872, 48.58598
 row.names(est.table) <- c("DSM", "Design-based")
 knitr::kable(est.table, digits=3, format="markdown")
 ```
 
+---
 
 # Summary
 
-
+- Quite similar results between HT and DSM
+  - Not always the case though!
+- Here no strong gradients etc
+- Methods not in Distance 7.1
+  - Will appear in Distance 7.2 (soon!)
+- Can already do this in R
 

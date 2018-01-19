@@ -37,7 +37,7 @@ background-size: cover
 ]
 
 .pull-right[
-![a winter wren](36408899245_0401014071_b.jpg)
+[![a winter wren](36408899245_0401014071_b.jpg)](https://www.flickr.com/photos/128578170@N06/36408899245/in/photolist-Xtk8ha-ozhg8P-RNvCM5-n7iqFP-JiYdQ8-8dfZJt-tSbTtE-vjKK9D-Yn7a95-VZ8KLd-RFNJoV-mEjZNf-dhQoEC-GDvKiY-TMQcbQ-oRMrpA-nqC484-XiHRpG-dgG2JG-TNVqbS-eJKERD-eJNHMo-c1iy63-c8bDZm-SnAeVC-FQTpHc-ueoFUP-thQ41p-HUVy51-RRuSEA-pPHJnB-AoWBnR-R9z7XL-mEivXr-rnzN5A-NreCVU-mMN1kF-et35N2-XyfDR3-YzByMc-abd3bE-Cgvrtf-YzByXn-absbKi-bJwftR-bru7vi-d9oPmJ-XiHRdu-aes1aA-6nnCq8)
 ]
 
 
@@ -98,14 +98,6 @@ Setting up the observation data, which links the observations with the segments 
 
 .pull-left[
 ![](exercise_files/figure-html/gof-1.png)&lt;!-- --&gt;
-
-```
-## 
-## Goodness of fit results for ddf object
-## 
-## Distance sampling Cramer-von Mises test (unweighted)
-## Test statistic = 0.218905 p-value = 0.233655
-```
 ]
 
 .pull-right[
@@ -126,11 +118,7 @@ class: inverse, middle, center
 - Only have `\(x\)` and `\(y\)` (projected) locations
 - `$$\mathbb{E} (n_j) = \pi w^2 \hat{p}_j \exp\left[ \beta_0 + s_{x,y}(x_j, y_j) \right]$$`
 - formula in Distance for Windows: `s(X, Y, k=25)`
-- (need to test `k` values, just need to be too big)
-
-
-
-
+- (might need to increase `k` values, just need to be too big)
 
 
 
@@ -225,19 +213,47 @@ class: inverse, middle, center
 
 ---
 
+# Uncertainty in predictions
+
+
+```
+## Summary of uncertainty in a density surface model calculated
+##  analytically for GAM, with delta method
+## 
+## Approximate asymptotic confidence interval:
+##     2.5%     Mean    97.5% 
+## 32.52872 39.75475 48.58598 
+## (Using log-Normal approximation)
+## 
+## Point estimate                 : 39.75475 
+## CV of detection function       : 0.09500205 
+## CV from GAM                    : 0.0388 
+## Total standard error           : 4.079649 
+## Total coefficient of variation : 0.1026
+```
+
+---
 
 # Comparison with design-based estimates
 
 - Buckland (2006) analysed these data w/ design-based method
 
 
-|             | Density|
-|:------------|-------:|
-|DSM          |   0.985|
-|Design-based |   1.020|
+|             | Density|CI        |
+|:------------|-------:|:---------|
+|DSM          |   0.985|0.81-1.2  |
+|Design-based |   1.020|0.80-1.32 |
 
+---
 
 # Summary
+
+- Quite similar results between HT and DSM
+  - Not always the case though!
+- Here no strong gradients etc
+- Methods not in Distance 7.1
+  - Will appear in Distance 7.2 (soon!)
+- Can already do this in R
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
